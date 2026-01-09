@@ -19,7 +19,8 @@ if (-not (Test-Path $SourceObsidian -PathType Container)) {
 
 # 检查目标 .obsidian 是否已存在
 if (Test-Path $Target) {
-    $confirm = Read-Host "Warning: 目标目录已存在 $Target`n是否覆盖? [y/N]"
+    Write-Host "Warning: 目标目录已存在 $Target" -ForegroundColor Yellow
+    $confirm = Read-Host "是否覆盖? [y/N]"
     if ($confirm -match '^[yY]([eE][sS])?$') {
         Remove-Item -Path $Target -Recurse -Force
     } else {

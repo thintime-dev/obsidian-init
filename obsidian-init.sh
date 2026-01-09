@@ -2,17 +2,22 @@
 # obsidian-init - 一键初始化 Obsidian 配置
 # 用法: obsidian-init [源配置目录路径]
 
+set -e  # 遇到错误立即退出
+
 # 默认 .obsidian 配置源路径(即.obsidian 文件夹所在路径)
-DEFAULT_SOURCE="~/Projects/dotfiles/obsidian"
+DEFAULT_SOURCE="$HOME/Projects/dotfiles/obsidian"
 
 # 获取源路径（使用参数或默认值）
 SOURCE="${1:-$DEFAULT_SOURCE}"
+
+# 处理路径中的 ~ (用户可能传入带引号的 ~/path)
+SOURCE="${SOURCE/#\~/$HOME}"
 
 # 源 .obsidian 目录的完整路径
 SOURCE_OBSIDIAN="$SOURCE/.obsidian"
 
 # 目标路径为当前目录下的 .obsidian
-TARGET="$(pwd)/.obsidian"
+TARGET="$PWD/.obsidian"
 
 # 检查源 .obsidian 目录是否存在
 if [ ! -d "$SOURCE_OBSIDIAN" ]; then
@@ -35,10 +40,8 @@ if [ -e "$TARGET" ]; then
     esac
 fi
 
-cp -r "$SOURCE_OBSIDIAN" "$TARGET"
-
-if [ $? -eq 0 ]; then
-    echo "Success: .obsidian 配置已复制到 $(pwd)/.obsidian"
+if cp -r "$SOURCE_OBSIDIAN" "$TARGET"; then
+    echo "Success: .obsidian 配置已复制到 $PWD/.obsidian"
 else
     echo "Error: 复制失败"
     exit 1
